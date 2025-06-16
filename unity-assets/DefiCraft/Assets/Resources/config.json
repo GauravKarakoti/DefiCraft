@@ -1,0 +1,15 @@
+{
+    "chainId": 12345,
+    "rpcUrl": "https://rpc-testnet.nerochain.io",
+    "contractAddresses": {
+      "workshopFactory": "0x3200986BffFF6B4062e9a043b326e21e3F0015Dd",
+      "tgequest": "0xb1CaE5c0D757E8fca044705FF9368D0BD6914834",
+      "stakingAmulet": "0xB0Aa5aE8087b7536457847b861286E956C7A1457"
+    },
+    "paymasterUrl": "https://paymaster-testnet.nerochain.io",
+    "gameSettings": {
+      "defaultWorkshops": ["Basic", "Advanced", "Elite"],
+      "craftingTimes": [30, 60, 120],
+      "tgeQuestIds": [1, 2, 3, 4, 5]
+    }
+  }
