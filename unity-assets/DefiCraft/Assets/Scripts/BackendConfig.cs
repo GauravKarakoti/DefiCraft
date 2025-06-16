@@ -6,7 +6,7 @@ public static class BackendConfig
     private const string LOCAL_BASE_URL = "http://localhost:4000/api";
     
     // For production (deployed server)
-    private const string PRODUCTION_BASE_URL = "https://defi-craft.vercel.app/api";
+    private const string PRODUCTION_BASE_URL = "https://deficraft-backend.onrender.com/api";
 
     public static string BASE_URL 
     {

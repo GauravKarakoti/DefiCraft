@@ -16,7 +16,7 @@ const AnalyticsDashboard: React.FC = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const response = await fetch('https://localhost:4000/api/analytics');
+        const response = await fetch('https://deficraft-backend.onrender.com/api/analytics');
         const data: AnalyticsData = await response.json();
         setAnalytics(data);
       } catch (error) {

@@ -2,7 +2,7 @@
 > Gameified DeFi Factory Builder on NERO Chain
 
 ## 🕹️ Live Demo  
-[Defi Craft](https://defi-craft.vercel.app)  
+[Defi Craft](https://deficraft-backend.onrender.com)  
 
 ## 🛠️ Features  
 - 🔥 **Gasless Crafting**: Build workshops with Paymaster-sponsored gas  
@@ -23,7 +23,6 @@
 ```bash  
 git clone https://github.com/GauravKarakoti/deficraft
 ```
-2. Set up Unity environment (see unity/README.md)
 3. Configure .env:
 ```bash
 cp .env.example .env
