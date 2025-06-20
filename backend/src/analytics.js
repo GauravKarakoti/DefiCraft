@@ -1,3 +1,16 @@
+/**
+ * Analytics Service - Tracks game metrics
+ * 
+ * Features:
+ * - Daily metrics reset at midnight
+ * - Production-safe event tracking
+ * - Supports hybrid transactions
+ * 
+ * Usage:
+ * import { analyticsService } from './analytics'
+ * analyticsService.trackPlayerActivity(address, action)
+ */
+
 import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();

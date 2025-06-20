@@ -22,6 +22,10 @@ await initDb()
 
 export class PartnerService {
   async registerPartner(partnerId, config) {
+    if (!config.longTermCommitment || config.commitmentDuration < 6) {
+      throw new Error('Partners must commit for 6+ months');
+    }
+    
     await initDb()
     await partnersCollection.updateOne(
       { partnerId },

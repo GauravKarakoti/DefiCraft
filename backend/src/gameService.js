@@ -1,5 +1,5 @@
 import express from 'express';
-import { getGasCoverage } from './paymaster.js';
+import { getGasCoverage, getCachedGasCoverage } from './paymaster.js';
 
 const router = express.Router();
 
@@ -19,14 +19,25 @@ router.post('/workshop/create', async (req, res) => {
   const { playerAddress } = req.body;
   
   // Check gas coverage
-  const coverage = await getGasCoverage(playerAddress);
+  const coverage = await getCachedGasCoverage(playerAddress);
   
-  if (coverage.percentage < 100) {
-    // Handle hybrid transaction
+  try {
+    if (coverage.percentage < 100) {
+      // Hybrid transaction flow
+      const txData = createHybridTransaction(playerAddress);
+      const sponsoredTx = await sponsorTransaction(txData);
+      return res.json({ hybridTx: sponsoredTx });
+    }
+    
+    // Full gas coverage flow
+    const result = await WorkshopFactory.mintWorkshop(playerAddress);
+    analyticsService.trackPlayerActivity(playerAddress, 'create_workshop');
+    
+    res.json({ success: true, ...result });
+  } catch (error) {
+    console.error('Workshop creation failed:', error);
+    res.status(500).json({ error: 'Workshop creation failed' });
   }
-  
-  // Create workshop logic
-  res.json({ success: true, workshopId: "12345" });
 });
 
 export default router;

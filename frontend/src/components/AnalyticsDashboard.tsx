@@ -5,6 +5,8 @@ interface AnalyticsData {
   workshops: number;
   transactions: number;
   gasSponsored: number;
+  gasCoverage: number;
+  sponsoredTransactions: number;
   revenue: number;
   date: string;
 }
@@ -57,6 +59,16 @@ const AnalyticsDashboard: React.FC = () => {
         <div className="metric-card">
           <h3>Gas Sponsored</h3>
           <p className="value">{analytics?.gasSponsored} ETH</p>
+        </div>
+
+        <div className="metric-card">
+          <h3>Gas Coverage</h3>
+          <p className="value">{analytics?.gasCoverage}%</p>
+        </div>
+
+        <div className="metric-card">
+          <h3>Sponsored TXs</h3>
+          <p className="value">{analytics?.sponsoredTransactions}</p>
         </div>
         
         <div className="metric-card">

@@ -41,3 +41,31 @@ cd contracts && forge build && forge create
 - Avg. session: 28 minutes
 - Gas saved: 89% via Paymaster
 - $YIELD distributed: 42,000 (testnet)
+
+# DeFiCraft Builder Guide
+## Long-term Development Approach
+1. **Design Phase**:
+   - Define user personas
+   - Gas payment strategy
+   - Tokenomics blueprint
+
+2. **Development Phase**:
+   - Use Nero Wallet Template
+   - Implement hybrid transactions
+   - Add analytics hooks
+
+3. **Testing Phase**:
+   - Test gas scenarios
+   - Validate user flows
+   - Load test paymaster
+
+## Paymaster Integration
+```javascript
+// Sample sponsorship flow
+async function createWithSponsorship() {
+  const coverage = await getGasCoverage(player);
+  if (coverage.percentage < 100) {
+    const tx = await sponsorTransaction(txData);
+  }
+}
+```

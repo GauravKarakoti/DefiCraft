@@ -55,5 +55,8 @@ createWeb3Modal({
   themeVariables: {
     '--w3m-accent': '#4361ee',
     '--w3m-border-radius-master': '8px'
-  }
+  },
+  enableAnalytics: true, // Added analytics
+  termsConditionsUrl: 'https://defi-craft.vercel.app/terms',
+  privacyPolicyUrl: 'https://defi-craft.vercel.app/privacy'
 })
