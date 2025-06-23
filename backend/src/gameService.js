@@ -1,7 +1,15 @@
 import express from 'express';
-import { getGasCoverage, getCachedGasCoverage } from './paymaster.js';
+import { getGasCoverage, getCachedGasCoverage, sponsorTransaction, sponsorWorkshopCreation } from './paymaster.cjs';
+import WorkshopFactoryService from './workshopFactory.cjs';
 
 const router = express.Router();
+
+const createMintTransaction = (playerAddress) => {
+  return WorkshopFactoryService.contract.mintWorkshop.populateTransaction(
+    playerAddress,
+    "Basic"
+  );
+};
 
 // Player level endpoint
 router.get('/player/:address/level', async (req, res) => {
@@ -14,23 +22,34 @@ router.get('/player/:address/level', async (req, res) => {
   });
 });
 
-// Workshop creation
 router.post('/workshop/create', async (req, res) => {
   const { playerAddress } = req.body;
-  
-  // Check gas coverage
   const coverage = await getCachedGasCoverage(playerAddress);
   
   try {
     if (coverage.percentage < 100) {
-      // Hybrid transaction flow
-      const txData = createHybridTransaction(playerAddress);
-      const sponsoredTx = await sponsorTransaction(txData);
-      return res.json({ hybridTx: sponsoredTx });
+      // Hybrid transaction flow using AA
+      const result = await sponsorWorkshopCreation(playerAddress);
+      
+      analyticsService.trackGasSponsored(parseFloat(result.gasSponsored));
+      analyticsService.trackPlayerActivity(
+        playerAddress, 
+        'sponsored_transaction',
+        { 
+          gasSponsored: result.gasSponsored,
+          txHash: result.sponsoredTx
+        }
+      );
+      
+      return res.json({ 
+        hybridTx: true,
+        sponsoredTx: result.sponsoredTx,
+        userGasRequired: coverage.userGasRequired 
+      });
     }
     
-    // Full gas coverage flow
-    const result = await WorkshopFactory.mintWorkshop(playerAddress);
+    // Full coverage flow
+    const result = await WorkshopFactoryService.mintWorkshop(playerAddress);
     analyticsService.trackPlayerActivity(playerAddress, 'create_workshop');
     
     res.json({ success: true, ...result });

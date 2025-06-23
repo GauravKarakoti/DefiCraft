@@ -24,12 +24,18 @@ const INITIAL_METRICS = {
     workshops: 0,
     transactions: 0,
     gasSponsored: 0,
-    revenue: 0
+    revenue: 0,
+    sponsoredTransactions: 0
 };
 
 export class AnalyticsService {
     constructor() {
         this.dailyMetrics = { ...INITIAL_METRICS };
+    }
+
+    trackSponsoredTransaction(gasAmount) {
+        this.dailyMetrics.sponsoredTransactions += 1;
+        this.dailyMetrics.gasSponsored += gasAmount;
     }
 
     async trackPlayerActivity(playerAddress, action, metadata = {}) {

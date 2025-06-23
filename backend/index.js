@@ -5,6 +5,10 @@ import { analyticsService } from './src/analytics.js';
 import { partnerService } from './src/partnerIntegration.js';
 import { tgeQuestService } from './src/tgeQuests.js';
 import gameRouter from './src/gameService.js';
+import { 
+  getCachedGasCoverage,
+  sponsorTransaction
+} from './src/paymaster.cjs';
 
 dotenv.config();
 
@@ -30,6 +34,37 @@ app.use('/api/game', gameRouter);
 // Analytics endpoints
 app.get('/api/analytics', (req, res) => {
   res.json(analyticsService.getDailyMetrics());
+});
+
+// Paymaster endpoints
+app.get('/api/paymaster/coverage/:playerAddress', async (req, res) => {
+  try {
+    const coverage = await getCachedGasCoverage(req.params.playerAddress);
+    res.json(coverage);
+  } catch (error) {
+    res.status(500).json({ 
+      error: error.message,
+      fallback: { percentage: 100, level: 1, userGasRequired: 0 }
+    });
+  }
+});
+
+app.post('/api/paymaster/sponsor/workshop', async (req, res) => {
+  const { playerAddress } = req.body;
+  
+  try {
+    const result = await sponsorTransaction({
+      functionName: 'mintWorkshop',
+      playerAddress
+    });
+    
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ 
+      error: error.message,
+      suggestion: 'Try again or use manual transaction'
+    });
+  }
 });
 
 // Partner endpoints
@@ -83,4 +118,6 @@ app.post('/api/tge/complete', async (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Paymaster API: ${process.env.PAYMASTER_API_KEY ? 'Enabled' : 'Disabled'}`);
+  console.log(`Operator Wallet: ${process.env.OPERATOR_PRIVATE_KEY ? 'Configured' : 'MISSING!'}`);
 });
