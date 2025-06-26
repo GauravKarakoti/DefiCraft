@@ -401,6 +401,7 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.1.7f1-x86_64/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.1.7f1-x86_64/Editor/Data/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll"
 "Assets/Scripts/BackendConfig.cs"
+"Assets/Scripts/CrossChainCrafting.cs"
 "Assets/Scripts/DefiIntegration.cs"
 "Assets/Scripts/ExampleUsage.cs"
 "Assets/Scripts/GuildBattleSystem.cs"

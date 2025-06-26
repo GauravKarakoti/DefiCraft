@@ -9,6 +9,11 @@ const initializeUserOp = async () => {
   return userOpModule;
 };
 
+const TOKEN_GATE_CONFIG = {
+  neroThreshold: ethers.parseEther("500"),
+  institutionalNftAddress: process.env.INSTITUTIONAL_NFT_ADDRESS || "",
+};
+
 // Configuration
 const AA_PLATFORM_CONFIG = {
   bundlerRpc: "https://bundler-testnet.nerochain.io/",
@@ -42,17 +47,43 @@ const simulateGasCoverage = async (playerAddress) => {
   try {
     // In reality, this would use AA rules - for now we'll simulate
     const level = await getPlayerLevel(playerAddress);
+    let percentage = Math.min(100, level * 20);
+    let userGasRequired = level > 0 ? 0 : 0.0001;
+
+    const neroBalance = await getTokenBalance(playerAddress, process.env.NERO_TOKEN_ADDRESS);
+    const hasInstitutionalNft = await checkNftOwnership(playerAddress, TOKEN_GATE_CONFIG.institutionalNftAddress);
     
-    // Simple coverage rules based on player level
-    return {
-      percentage: Math.min(100, level * 20), // 20% per level
-      level,
-      userGasRequired: level > 0 ? 0 : 0.0001 // ETH
-    };
+    // Apply token-gated rules
+    if (hasInstitutionalNft) {
+      return { percentage: 100, level, userGasRequired: 0 };
+    } else if (neroBalance >= TOKEN_GATE_CONFIG.neroThreshold) {
+      return { percentage, level, userGasRequired, canPayWithStable: true };
+    }
+    
+    return { percentage, level, userGasRequired, canPayWithStable: false };
   } catch (error) {
     console.error("Coverage simulation error:", error);
-    return { percentage: 100, level: 1, userGasRequired: 0 };
+    return { percentage: 100, level: 1, userGasRequired: 0, canPayWithStable: false };
   }
+};
+
+const getTokenBalance = async (address, tokenAddress) => {
+  const contract = new ethers.Contract(
+    tokenAddress,
+    ["function balanceOf(address) view returns (uint256)"],
+    provider
+  );
+  return contract.balanceOf(address);
+};
+
+const checkNftOwnership = async (address, nftAddress) => {
+  if (!nftAddress) return false;
+  const contract = new ethers.Contract(
+    nftAddress,
+    ["function balanceOf(address) view returns (uint256)"],
+    provider
+  );
+  return (await contract.balanceOf(address)) > 0;
 };
 
 // Get player level from contract

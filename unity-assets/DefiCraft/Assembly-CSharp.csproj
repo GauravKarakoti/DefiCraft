@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ExampleUsage.cs" />
+    <Compile Include="Assets\Scripts\CrossChainCrafting.cs" />
     <Compile Include="Assets\Scripts\WorkshopManager.cs" />
     <Compile Include="Assets\Scripts\DefiIntegration.cs" />
     <Compile Include="Assets\Scripts\GuildBattleSystem.cs" />
